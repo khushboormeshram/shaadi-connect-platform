@@ -1,30 +1,79 @@
-# Wedding Connect Platform
+# Shaadi Connect
 
-This repository is organized as a two-part application:
+Full-stack wedding planning platform built using React, Spring Boot, Spring Security, JWT, MySQL, Razorpay, and Google Gemini AI.
 
-- `frontend/` - React, TypeScript, Vite, Tailwind CSS
-- `backend/` - Spring Boot, Spring Security, JPA, MySQL
+---
 
-## Run Locally
+## Features
 
-Frontend:
+- JWT Authentication & Authorization
+- Vendor Booking System
+- Razorpay Payment Integration
+- AI Wedding Chatbot
+- AI Honeymoon Planner
+- Role-Based Admin Dashboard
+- RESTful APIs
+- Secure Spring Security Configuration
 
-~~~bash
-cd frontend
-npm install
-npm run dev
-~~~
+---
 
-Backend:
+## Tech Stack
 
-~~~bash
-cd backend
-mvn spring-boot:run
-~~~
+### Frontend
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+
+### Backend
+- Spring Boot
+- Spring Security
+- JPA/Hibernate
+- MySQL
+- JWT Authentication
+
+### APIs & Services
+- Razorpay
+- Google Gemini AI
+- ElevenLabs
+
+---
 
 ## Project Structure
 
-~~~
-frontend/   # UI, routing, components, and Vite config
-backend/    # REST APIs, security, database, and services
-~~~
+```bash
+frontend/
+ ├── components/
+ ├── pages/
+ ├── hooks/
+ └── services/
+
+backend/
+ ├── controller/
+ ├── service/
+ ├── repository/
+ ├── security/
+ ├── dto/
+ └── model/
+```
+
+---
+
+## Run Locally
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Backend
+
+```bash
+cd backend
+mvn spring-boot:run
+```
+
+---
