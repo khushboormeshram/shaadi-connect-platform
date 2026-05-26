@@ -335,7 +335,7 @@ const FeaturedVendors: React.FC = () => {
   };
 
   const handleBookingChange = (
-      e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> | { target: { name: string; value: string } }
   ) => {
     const { name, value } = 'target' in e ? e.target : e;
     setBookingData({
@@ -473,7 +473,7 @@ const FeaturedVendors: React.FC = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
 
-      const response = await fetch('http://localhost:5000/api/create-order', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -525,7 +525,7 @@ const FeaturedVendors: React.FC = () => {
           console.log('Payment response:', response);
 
           try {
-            const verifyResponse = await fetch('http://localhost:5000/api/verify-payment', {
+            const verifyResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/verify-payment`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -660,507 +660,285 @@ const FeaturedVendors: React.FC = () => {
   };
 
   return (
-      <section id="vendors" className="py-24 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 animate-fade-in-down tracking-tight">
-              Featured Vendors
-            </h2>
-            <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Discover our curated selection of top-tier vendors, each with exceptional ratings and verified credentials to make your wedding unforgettable.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {displayedVendors.map((vendor) => (
-                <Card
-                    key={vendor.id}
-                    className="group bg-white/90 backdrop-blur-sm border-none shadow-md hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden transform hover:-translate-y-2"
-                >
-                  <div className="relative">
-                    <img
-                        src={vendor.image}
-                        alt={vendor.name}
-                        className="w-full h-60 object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Badge className="bg-rose-500 text-white font-semibold px-4 py-1.5 rounded-full hover:bg-rose-600 transition-colors duration-300">
-                        {vendor.category}
-                      </Badge>
-                    </div>
-                    <div className="absolute top-4 right-4">
-                      <Button size="sm" variant="ghost" className="bg-white/95 hover:bg-white text-rose-500 p-2.5 rounded-full shadow-sm hover:shadow-md transition-all duration-300">
-                        <Heart className="h-5 w-5" />
-                      </Button>
-                    </div>
-                    {vendor.verified && (
-                        <div className="absolute bottom-4 left-4">
-                          <Badge className="bg-emerald-500 text-white font-semibold px-4 py-1.5 rounded-full shadow-sm">
-                            ✓ Verified
-                          </Badge>
-                        </div>
-                    )}
-                  </div>
-
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-xl font-bold text-gray-900 group-hover:text-rose-500 transition-colors duration-300 truncate">
-                        {vendor.name}
-                      </h3>
-                      <div className="flex items-center space-x-1.5">
-                        <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                        <span className="text-sm font-semibold text-gray-700">{vendor.rating}</span>
-                        <span className="text-sm text-gray-500">({vendor.reviews})</span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="h-5 w-5 mr-2 text-rose-500" />
-                      <span className="text-sm font-medium">{vendor.location}</span>
-                    </div>
-
-                    <div>
-                      <p className="text-lg font-semibold text-rose-600">{vendor.price}</p>
-                      <div className="flex flex-wrap gap-2 mt-2">
-                        {vendor.specialties.map((specialty, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs bg-gray-100 text-gray-700 font-medium px-3 py-1 rounded-full">
-                              {specialty}
-                            </Badge>
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex flex-wrap gap-3">
-                      <Button
-                          variant="outline"
-                          className="flex-1 min-w-[100px] border-rose-300 text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-semibold rounded-full py-2.5 transition-all duration-300 shadow-sm hover:shadow-md"
-                          onClick={() => openContactModal(vendor)}
-                      >
-                        <Phone className="h-4 w-4 mr-2" />
-                        Contact
-                      </Button>
-                      <Button
-                          className="flex-1 min-w-[100px] bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-2.5 shadow-sm hover:shadow-md transition-all duration-300"
-                          onClick={() => openDetailsModal(vendor)}
-                      >
-                        Details
-                      </Button>
-                      <Button
-                          className="flex-1 min-w-[100px] bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-2.5 shadow-sm hover:shadow-md transition-all duration-300"
-                          onClick={() => openBookingModal(vendor)}
-                      >
-                        <Calendar className="h-4 w-4 mr-2" />
-                        Book
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-            ))}
-          </div>
-
-          <div className="text-center mt-16">
-            <Button
-                className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-10 py-3.5 text-lg font-semibold rounded-full hover:from-rose-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
-                onClick={toggleShowAll}
-            >
-              {showAll ? 'View Less' : 'View More'}
-            </Button>
-          </div>
+    <section id="vendors" className="py-24 bg-gradient-to-b from-gray-50 to-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 animate-fade-in-down tracking-tight">
+            Featured Vendors
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Discover our curated selection of top-tier vendors, each with exceptional ratings and verified credentials to make your wedding unforgettable.
+          </p>
         </div>
 
-        {showContactModal && (
-            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fade-in transition-opacity duration-500">
-              <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 max-w-md sm:max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-2xl transform transition-transform duration-500 scale-95 animate-scale-in">
-                <button
-                    onClick={() => setShowContactModal(false)}
-                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-300 bg-gray-100 rounded-full p-2.5 shadow-sm hover:shadow-md"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight">
-                  Contact {selectedVendor?.name}
-                </h3>
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleFormChange}
-                        className={`w-full px-4 py-3 border ${formErrors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                        placeholder="Your Name"
-                        required
-                    />
-                    {formErrors.name && <p className="text-red-500 text-xs mt-1.5">{formErrors.name}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                    <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleFormChange}
-                        className={`w-full px-4 py-3 border ${formErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                        placeholder="Your Email"
-                        required
-                    />
-                    {formErrors.email && <p className="text-red-500 text-xs mt-1.5">{formErrors.email}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                    <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleFormChange}
-                        className={`w-full px-4 py-3 border ${formErrors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                        placeholder="+91xxxxxxxxxx"
-                        required
-                    />
-                    {formErrors.phone && <p className="text-red-500 text-xs mt-1.5">{formErrors.phone}</p>}
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
-                    <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleFormChange}
-                        className={`w-full px-4 py-3 border ${formErrors.message ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                        placeholder="Your Message"
-                        rows={5}
-                        required
-                    />
-                    {formErrors.message && <p className="text-red-500 text-xs mt-1.5">{formErrors.message}</p>}
-                  </div>
-                  <Button
-                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
-                      onClick={handleFormSubmit}
-                      disabled={isSubmitting}
-                  >
-                    Submit Inquiry
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {displayedVendors.map((vendor) => (
+            <Card
+              key={vendor.id}
+              className="group bg-white/90 backdrop-blur-sm border-none shadow-md hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden transform hover:-translate-y-2"
+            >
+              <div className="relative">
+                <img
+                  src={vendor.image}
+                  alt={vendor.name}
+                  className="w-full h-60 object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                />
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-rose-500 text-white font-semibold px-4 py-1.5 rounded-full hover:bg-rose-600 transition-colors duration-300">
+                    {vendor.category}
+                  </Badge>
+                </div>
+                <div className="absolute top-4 right-4">
+                  <Button size="sm" variant="ghost" className="bg-white/95 hover:bg-white text-rose-500 p-2.5 rounded-full shadow-sm hover:shadow-md transition-all duration-300">
+                    <Heart className="h-5 w-5" />
                   </Button>
                 </div>
+                {vendor.verified && (
+                  <div className="absolute bottom-4 left-4">
+                    <Badge className="bg-emerald-500 text-white font-semibold px-4 py-1.5 rounded-full shadow-sm">
+                      ✓ Verified
+                    </Badge>
+                  </div>
+                )}
               </div>
-            </div>
-        )}
 
-        {showDetailsModal && (
-            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fade-in transition-opacity duration-500">
-              <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 max-w-lg sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl transform transition-transform duration-500 scale-95 animate-scale-in">
-                <button
-                    onClick={() => setShowDetailsModal(false)}
-                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-300 bg-gray-100 rounded-full p-2.5 shadow-sm hover:shadow-md"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight">
-                  {selectedVendor?.name}
-                </h3>
-                <img
-                    src={selectedVendor?.image}
-                    alt={selectedVendor?.name}
-                    className="w-full h-72 object-cover rounded-xl mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
-                />
-                <div className="space-y-8">
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-3">About</h4>
-                    <p className="text-sm text-gray-600 leading-relaxed">{selectedVendor?.description}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-3">Portfolio</h4>
-                    <div className="grid grid-cols-3 gap-4">
-                      {selectedVendor?.portfolio.map((img, index) => (
-                          <img
-                              key={index}
-                              src={img}
-                              alt={`Portfolio ${index + 1}`}
-                              className="w-full h-28 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform duration-300"
-                          />
-                      ))}
-                    </div>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-3">Contact</h4>
-                    <p className="text-sm text-gray-600 flex items-center gap-2">
-                      <Mail className="h-5 w-5 text-rose-500" />
-                      {selectedVendor?.contact}
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-gray-800 mb-3">Specialties</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedVendor?.specialties.map((specialty, index) => (
-                          <Badge key={index} variant="secondary" className="text-xs bg-gray-100 text-gray-700 font-medium px-3 py-1 rounded-full">
-                            {specialty}
-                          </Badge>
-                        ))}
-                    </div>
-                  </div>
-                  <div className="border-t pt-6">
-                    <h4 className="text-lg font-semibold text-gray-800 mb-4">Book Now</h4>
-                    <div className="space-y-6">
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
-                        <input
-                            type="text"
-                            name="name"
-                            value={bookingData.name}
-                            onChange={handleBookingChange}
-                            className={`w-full px-4 py-3 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                            placeholder="Your Name"
-                            required
-                            disabled={isSubmitting}
-                        />
-                        {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name}</p>}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                        <input
-                            type="email"
-                            name="email"
-                            value={bookingData.email}
-                            onChange={handleBookingChange}
-                            className={`w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                            placeholder="Your Email"
-                            required
-                            disabled={isSubmitting}
-                        />
-                        {errors.email && <p className="text-red-500 text-xs mt-1.5">{errors.email}</p>}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
-                        <input
-                            type="tel"
-                            name="phone"
-                            value={bookingData.phone}
-                            onChange={handleBookingChange}
-                            className={`w-full px-4 py-3 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                            placeholder="+91xxxxxxxxxx"
-                            required
-                            disabled={isSubmitting}
-                        />
-                        {errors.phone && <p className="text-red-500 text-xs mt-1.5">{errors.phone}</p>}
-                      </div>
-                      <div className="relative">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2 transition-all duration-300">
-                          Event Date
-                        </label>
-                        <div className="relative">
-                          <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                          <input
-                              type="date"
-                              name="eventDate"
-                              value={bookingData.eventDate}
-                              onChange={handleBookingChange}
-                              className={`w-full pl-10 pr-4 py-3 border ${errors.eventDate ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                              min={new Date().toISOString().split('T')[0]}
-                              required
-                              disabled={isSubmitting}
-                          />
-                        </div>
-                        {errors.eventDate && <p className="text-red-500 text-xs mt-1.5">{errors.eventDate}</p>}
-                      </div>
-                      <div className="relative">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2 transition-all duration-300">
-                          Event Time
-                        </label>
-                        <div className="relative">
-                          <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                          <input
-                              type="time"
-                              name="eventTime"
-                              value={bookingData.eventTime}
-                              onChange={handleBookingChange}
-                              className={`w-full pl-10 pr-4 py-3 border ${errors.eventTime ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                              required
-                              disabled={isSubmitting}
-                          />
-                        </div>
-                        {errors.eventTime && <p className="text-red-500 text-xs mt-1.5">{errors.eventTime}</p>}
-                      </div>
-                      <div className="relative">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2 transition-all duration-300">
-                          Deposit Amount (₹)
-                        </label>
-                        <div className="relative">
-                          <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                          <input
-                              type="number"
-                              name="deposit"
-                              value={bookingData.deposit}
-                              onChange={handleBookingChange}
-                              className={`w-full pl-10 pr-4 py-3 border ${errors.deposit ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                              placeholder="Enter deposit amount"
-                              min="0"
-                              required
-                              disabled={isSubmitting}
-                          />
-                        </div>
-                        {errors.deposit && <p className="text-red-500 text-xs mt-1.5">{errors.deposit}</p>}
-                      </div>
-                      <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Method</label>
-                        <div className="grid grid-cols-1 gap-4">
-                          <div
-                              className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 ${
-                                  bookingData.paymentMethod === 'online'
-                                      ? 'border-rose-500 bg-rose-50 shadow-md'
-                                      : 'border-gray-300 hover:bg-gray-50 hover:shadow-sm'
-                              } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                              onClick={() => {
-                                if (!isSubmitting) {
-                                  handleBookingChange({ target: { name: 'paymentMethod', value: 'online' } });
-                                  initiateRazorpayPayment();
-                                }
-                              }}
-                          >
-                            <CreditCard className="h-6 w-6 text-rose-500 mb-2 mx-auto" />
-                            <p className="text-sm font-semibold text-gray-800 text-center">
-                              {isSubmitting ? 'Processing Payment...' : 'Pay with UPI'}
-                            </p>
-                          </div>
-                        </div>
-                        {errors.paymentMethod && <p className="text-red-500 text-xs mt-1.5">{errors.paymentMethod}</p>}
-                      </div>
-                      {bookingData.paymentMethod === 'online' && (
-                          <div className="relative">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">UPI ID</label>
-                            <div className="relative">
-                              <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                              <input
-                                  type="text"
-                                  name="upiId"
-                                  value={bookingData.upiId}
-                                  onChange={handleBookingChange}
-                                  className={`w-full pl-10 pr-4 py-3 border ${errors.upiId ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                                  placeholder="Enter UPI ID (e.g., name@upi)"
-                                  required
-                                  disabled={isSubmitting}
-                              />
-                            </div>
-                            {errors.upiId && <p className="text-red-500 text-xs mt-1.5">{errors.upiId}</p>}
-                          </div>
-                      )}
-                      {(bookingData.name || bookingData.email || bookingData.phone || bookingData.eventDate || bookingData.eventTime || bookingData.deposit || bookingData.paymentMethod || bookingData.paymentId) && (
-                          <div className="border-t pt-6">
-                            <h4 className="text-lg font-semibold text-gray-800 mb-3">Booking Summary</h4>
-                            <div className="space-y-2 text-sm text-gray-600">
-                              <p><strong>Vendor:</strong> {selectedVendor?.name}</p>
-                              {bookingData.name && <p><strong>Name:</strong> {bookingData.name}</p>}
-                              {bookingData.email && <p><strong>Email:</strong> {bookingData.email}</p>}
-                              {bookingData.phone && <p><strong>Phone:</strong> {bookingData.phone}</p>}
-                              {bookingData.eventDate && <p><strong>Date:</strong> {bookingData.eventDate}</p>}
-                              {bookingData.eventTime && <p><strong>Time:</strong> {bookingData.eventTime}</p>}
-                              {bookingData.deposit && <p><strong>Deposit:</strong> ₹{bookingData.deposit}</p>}
-                              {bookingData.paymentMethod && <p><strong>Payment Method:</strong> UPI</p>}
-                              {bookingData.upiId && <p><strong>UPI ID:</strong> {bookingData.upiId}</p>}
-                              {bookingData.paymentId && <p><strong>Payment ID:</strong> {bookingData.paymentId}</p>}
-                            </div>
-                          </div>
-                      )}
-                      <div className="flex gap-4">
-                        <Button
-                            variant="outline"
-                            className="w-full border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-full py-3.5 shadow-sm hover:shadow-md transition-all duration-300"
-                            onClick={() => setShowDetailsModal(false)}
-                            disabled={isSubmitting}
-                        >
-                          Cancel
-                        </Button>
-                        <Button
-                            className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
-                            onClick={handleBookingSubmit}
-                            disabled={isSubmitting || !isPaymentCompleted}
-                        >
-                          {isSubmitting ? (
-                              <span className="flex items-center">
-                                <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                                  <path
-                                      className="opacity-75"
-                                      fill="currentColor"
-                                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                  />
-                                </svg>
-                                Processing...
-                              </span>
-                          ) : (
-                              'Confirm Booking'
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <Button
-                        className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
-                        onClick={() => {
-                          setShowDetailsModal(false);
-                          openContactModal(selectedVendor!);
-                        }}
-                        disabled={isSubmitting}
-                    >
-                      Contact Vendor
-                    </Button>
+              <CardContent className="p-6 space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-xl font-bold text-gray-900 group-hover:text-rose-500 transition-colors duration-300 truncate">
+                    {vendor.name}
+                  </h3>
+                  <div className="flex items-center space-x-1.5">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span className="text-sm font-semibold text-gray-700">{vendor.rating}</span>
+                    <span className="text-sm text-gray-500">({vendor.reviews})</span>
                   </div>
                 </div>
-              </div>
-            </div>
-        )}
 
-        {showBookingModal && (
-            <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fade-in transition-opacity duration-500">
-              <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 max-w-md sm:max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-2xl transform transition-transform duration-500 scale-95 animate-scale-in">
-                <button
-                    onClick={() => setShowBookingModal(false)}
-                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-300 bg-gray-100 rounded-full p-2.5 shadow-sm hover:shadow-md"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-                <h3 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight">
-                  Book {selectedVendor?.name}
-                </h3>
+                <div className="flex items-center text-gray-600">
+                  <MapPin className="h-5 w-5 mr-2 text-rose-500" />
+                  <span className="text-sm font-medium">{vendor.location}</span>
+                </div>
+
+                <div>
+                  <p className="text-lg font-semibold text-rose-600">{vendor.price}</p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {vendor.specialties.map((specialty, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs bg-gray-100 text-gray-700 font-medium px-3 py-1 rounded-full">
+                        {specialty}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    variant="outline"
+                    className="flex-1 min-w-[100px] border-rose-300 text-rose-600 hover:bg-rose-50 hover:text-rose-700 font-semibold rounded-full py-2.5 transition-all duration-300 shadow-sm hover:shadow-md"
+                    onClick={() => openContactModal(vendor)}
+                  >
+                    <Phone className="h-4 w-4 mr-2" />
+                    Contact
+                  </Button>
+                  <Button
+                    className="flex-1 min-w-[100px] bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-2.5 shadow-sm hover:shadow-md transition-all duration-300"
+                    onClick={() => openDetailsModal(vendor)}
+                  >
+                    Details
+                  </Button>
+                  <Button
+                    className="flex-1 min-w-[100px] bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-2.5 shadow-sm hover:shadow-md transition-all duration-300"
+                    onClick={() => openBookingModal(vendor)}
+                  >
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Book
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <div className="text-center mt-16">
+          <Button
+            className="bg-gradient-to-r from-rose-500 to-pink-500 text-white px-10 py-3.5 text-lg font-semibold rounded-full hover:from-rose-600 hover:to-pink-600 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl"
+            onClick={toggleShowAll}
+          >
+            {showAll ? 'View Less' : 'View More'}
+          </Button>
+        </div>
+      </div>
+
+      {showContactModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fade-in transition-opacity duration-500">
+          <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 max-w-md sm:max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-2xl transform transition-transform duration-500 scale-95 animate-scale-in">
+            <button
+              onClick={() => setShowContactModal(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-300 bg-gray-100 rounded-full p-2.5 shadow-sm hover:shadow-md"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight">
+              Contact {selectedVendor?.name}
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleFormChange}
+                  className={`w-full px-4 py-3 border ${formErrors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                  placeholder="Your Name"
+                  required
+                />
+                {formErrors.name && <p className="text-red-500 text-xs mt-1.5">{formErrors.name}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleFormChange}
+                  className={`w-full px-4 py-3 border ${formErrors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                  placeholder="Your Email"
+                  required
+                />
+                {formErrors.email && <p className="text-red-500 text-xs mt-1.5">{formErrors.email}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleFormChange}
+                  className={`w-full px-4 py-3 border ${formErrors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                  placeholder="+91xxxxxxxxxx"
+                  required
+                />
+                {formErrors.phone && <p className="text-red-500 text-xs mt-1.5">{formErrors.phone}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Message</label>
+                <textarea
+                  name="message"
+                  value={formData.message}
+                  onChange={handleFormChange}
+                  className={`w-full px-4 py-3 border ${formErrors.message ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                  placeholder="Your Message"
+                  rows={5}
+                  required
+                />
+                {formErrors.message && <p className="text-red-500 text-xs mt-1.5">{formErrors.message}</p>}
+              </div>
+              <Button
+                className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={handleFormSubmit}
+                disabled={isSubmitting}
+              >
+                Submit Inquiry
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDetailsModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fade-in transition-opacity duration-500">
+          <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 max-w-lg sm:max-w-2xl w-full max-h-[90vh] overflow-y-auto relative shadow-2xl transform transition-transform duration-500 scale-95 animate-scale-in">
+            <button
+              onClick={() => setShowDetailsModal(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-300 bg-gray-100 rounded-full p-2.5 shadow-sm hover:shadow-md"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight">
+              {selectedVendor?.name}
+            </h3>
+            <img
+              src={selectedVendor?.image}
+              alt={selectedVendor?.name}
+              className="w-full h-72 object-cover rounded-xl mb-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+            />
+            <div className="space-y-8">
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">About</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">{selectedVendor?.description}</p>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Portfolio</h4>
+                <div className="grid grid-cols-3 gap-4">
+                  {selectedVendor?.portfolio.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img}
+                      alt={`Portfolio ${index + 1}`}
+                      className="w-full h-28 object-cover rounded-lg shadow-sm hover:scale-105 transition-transform duration-300"
+                    />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Contact</h4>
+                <p className="text-sm text-gray-600 flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-rose-500" />
+                  {selectedVendor?.contact}
+                </p>
+              </div>
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3">Specialties</h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedVendor?.specialties.map((specialty, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs bg-gray-100 text-gray-700 font-medium px-3 py-1 rounded-full">
+                      {specialty}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+              <div className="border-t pt-6">
+                <h4 className="text-lg font-semibold text-gray-800 mb-4">Book Now</h4>
                 <div className="space-y-6">
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
                     <input
-                        type="text"
-                        name="name"
-                        value={bookingData.name}
-                        onChange={handleBookingChange}
-                        className={`w-full px-4 py-3 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                        placeholder="Your Name"
-                        required
-                        disabled={isSubmitting}
+                      type="text"
+                      name="name"
+                      value={bookingData.name}
+                      onChange={handleBookingChange}
+                      className={`w-full px-4 py-3 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                      placeholder="Your Name"
+                      required
+                      disabled={isSubmitting}
                     />
                     {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                     <input
-                        type="email"
-                        name="email"
-                        value={bookingData.email}
-                        onChange={handleBookingChange}
-                        className={`w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                        placeholder="Your Email"
-                        required
-                        disabled={isSubmitting}
+                      type="email"
+                      name="email"
+                      value={bookingData.email}
+                      onChange={handleBookingChange}
+                      className={`w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                      placeholder="Your Email"
+                      required
+                      disabled={isSubmitting}
                     />
                     {errors.email && <p className="text-red-500 text-xs mt-1.5">{errors.email}</p>}
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
                     <input
-                        type="tel"
-                        name="phone"
-                        value={bookingData.phone}
-                        onChange={handleBookingChange}
-                        className={`w-full px-4 py-3 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                        placeholder="+91xxxxxxxxxx"
-                        required
-                        disabled={isSubmitting}
+                      type="tel"
+                      name="phone"
+                      value={bookingData.phone}
+                      onChange={handleBookingChange}
+                      className={`w-full px-4 py-3 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                      placeholder="+91xxxxxxxxxx"
+                      required
+                      disabled={isSubmitting}
                     />
                     {errors.phone && <p className="text-red-500 text-xs mt-1.5">{errors.phone}</p>}
                   </div>
@@ -1171,14 +949,14 @@ const FeaturedVendors: React.FC = () => {
                     <div className="relative">
                       <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                       <input
-                          type="date"
-                          name="eventDate"
-                          value={bookingData.eventDate}
-                          onChange={handleBookingChange}
-                          className={`w-full pl-10 pr-4 py-3 border ${errors.eventDate ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                          min={new Date().toISOString().split('T')[0]}
-                          required
-                          disabled={isSubmitting}
+                        type="date"
+                        name="eventDate"
+                        value={bookingData.eventDate}
+                        onChange={handleBookingChange}
+                        className={`w-full pl-10 pr-4 py-3 border ${errors.eventDate ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                        min={new Date().toISOString().split('T')[0]}
+                        required
+                        disabled={isSubmitting}
                       />
                     </div>
                     {errors.eventDate && <p className="text-red-500 text-xs mt-1.5">{errors.eventDate}</p>}
@@ -1190,13 +968,13 @@ const FeaturedVendors: React.FC = () => {
                     <div className="relative">
                       <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                       <input
-                          type="time"
-                          name="eventTime"
-                          value={bookingData.eventTime}
-                          onChange={handleBookingChange}
-                          className={`w-full pl-10 pr-4 py-3 border ${errors.eventTime ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                          required
-                          disabled={isSubmitting}
+                        type="time"
+                        name="eventTime"
+                        value={bookingData.eventTime}
+                        onChange={handleBookingChange}
+                        className={`w-full pl-10 pr-4 py-3 border ${errors.eventTime ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                        required
+                        disabled={isSubmitting}
                       />
                     </div>
                     {errors.eventTime && <p className="text-red-500 text-xs mt-1.5">{errors.eventTime}</p>}
@@ -1208,15 +986,15 @@ const FeaturedVendors: React.FC = () => {
                     <div className="relative">
                       <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                       <input
-                          type="number"
-                          name="deposit"
-                          value={bookingData.deposit}
-                          onChange={handleBookingChange}
-                          className={`w-full pl-10 pr-4 py-3 border ${errors.deposit ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                          placeholder="Enter deposit amount"
-                          min="0"
-                          required
-                          disabled={isSubmitting}
+                        type="number"
+                        name="deposit"
+                        value={bookingData.deposit}
+                        onChange={handleBookingChange}
+                        className={`w-full pl-10 pr-4 py-3 border ${errors.deposit ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                        placeholder="Enter deposit amount"
+                        min="0"
+                        required
+                        disabled={isSubmitting}
                       />
                     </div>
                     {errors.deposit && <p className="text-red-500 text-xs mt-1.5">{errors.deposit}</p>}
@@ -1225,17 +1003,16 @@ const FeaturedVendors: React.FC = () => {
                     <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Method</label>
                     <div className="grid grid-cols-1 gap-4">
                       <div
-                          className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 ${
-                              bookingData.paymentMethod === 'online'
-                                  ? 'border-rose-500 bg-rose-50 shadow-md'
-                                  : 'border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+                        className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 ${bookingData.paymentMethod === 'online'
+                          ? 'border-rose-500 bg-rose-50 shadow-md'
+                          : 'border-gray-300 hover:bg-gray-50 hover:shadow-sm'
                           } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-                          onClick={() => {
-                            if (!isSubmitting) {
-                              handleBookingChange({ target: { name: 'paymentMethod', value: 'online' } });
-                              initiateRazorpayPayment();
-                            }
-                          }}
+                        onClick={() => {
+                          if (!isSubmitting) {
+                            handleBookingChange({ target: { name: 'paymentMethod', value: 'online' } });
+                            initiateRazorpayPayment();
+                          }
+                        }}
                       >
                         <CreditCard className="h-6 w-6 text-rose-500 mb-2 mx-auto" />
                         <p className="text-sm font-semibold text-gray-800 text-center">
@@ -1246,77 +1023,298 @@ const FeaturedVendors: React.FC = () => {
                     {errors.paymentMethod && <p className="text-red-500 text-xs mt-1.5">{errors.paymentMethod}</p>}
                   </div>
                   {bookingData.paymentMethod === 'online' && (
+                    <div className="relative">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">UPI ID</label>
                       <div className="relative">
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">UPI ID</label>
-                        <div className="relative">
-                          <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                          <input
-                              type="text"
-                              name="upiId"
-                              value={bookingData.upiId}
-                              onChange={handleBookingChange}
-                              className={`w-full pl-10 pr-4 py-3 border ${errors.upiId ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
-                              placeholder="Enter UPI ID (e.g., name@upi)"
-                              required
-                              disabled={isSubmitting}
-                          />
-                        </div>
-                        {errors.upiId && <p className="text-red-500 text-xs mt-1.5">{errors.upiId}</p>}
+                        <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <input
+                          type="text"
+                          name="upiId"
+                          value={bookingData.upiId}
+                          onChange={handleBookingChange}
+                          className={`w-full pl-10 pr-4 py-3 border ${errors.upiId ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                          placeholder="Enter UPI ID (e.g., name@upi)"
+                          required
+                          disabled={isSubmitting}
+                        />
                       </div>
+                      {errors.upiId && <p className="text-red-500 text-xs mt-1.5">{errors.upiId}</p>}
+                    </div>
                   )}
                   {(bookingData.name || bookingData.email || bookingData.phone || bookingData.eventDate || bookingData.eventTime || bookingData.deposit || bookingData.paymentMethod || bookingData.paymentId) && (
-                      <div className="border-t pt-6">
-                        <h4 className="text-lg font-semibold text-gray-800 mb-3">Booking Summary</h4>
-                        <div className="space-y-2 text-sm text-gray-600">
-                          <p><strong>Vendor:</strong> {selectedVendor?.name}</p>
-                          {bookingData.name && <p><strong>Name:</strong> {bookingData.name}</p>}
-                          {bookingData.email && <p><strong>Email:</strong> {bookingData.email}</p>}
-                          {bookingData.phone && <p><strong>Phone:</strong> {bookingData.phone}</p>}
-                          {bookingData.eventDate && <p><strong>Date:</strong> {bookingData.eventDate}</p>}
-                          {bookingData.eventTime && <p><strong>Time:</strong> {bookingData.eventTime}</p>}
-                          {bookingData.deposit && <p><strong>Deposit:</strong> ₹{bookingData.deposit}</p>}
-                          {bookingData.paymentMethod && <p><strong>Payment Method:</strong> UPI</p>}
-                          {bookingData.upiId && <p><strong>UPI ID:</strong> {bookingData.upiId}</p>}
-                          {bookingData.paymentId && <p><strong>Payment ID:</strong> {bookingData.paymentId}</p>}
-                        </div>
+                    <div className="border-t pt-6">
+                      <h4 className="text-lg font-semibold text-gray-800 mb-3">Booking Summary</h4>
+                      <div className="space-y-2 text-sm text-gray-600">
+                        <p><strong>Vendor:</strong> {selectedVendor?.name}</p>
+                        {bookingData.name && <p><strong>Name:</strong> {bookingData.name}</p>}
+                        {bookingData.email && <p><strong>Email:</strong> {bookingData.email}</p>}
+                        {bookingData.phone && <p><strong>Phone:</strong> {bookingData.phone}</p>}
+                        {bookingData.eventDate && <p><strong>Date:</strong> {bookingData.eventDate}</p>}
+                        {bookingData.eventTime && <p><strong>Time:</strong> {bookingData.eventTime}</p>}
+                        {bookingData.deposit && <p><strong>Deposit:</strong> ₹{bookingData.deposit}</p>}
+                        {bookingData.paymentMethod && <p><strong>Payment Method:</strong> UPI</p>}
+                        {bookingData.upiId && <p><strong>UPI ID:</strong> {bookingData.upiId}</p>}
+                        {bookingData.paymentId && <p><strong>Payment ID:</strong> {bookingData.paymentId}</p>}
                       </div>
+                    </div>
                   )}
                   <div className="flex gap-4">
                     <Button
-                        variant="outline"
-                        className="w-full border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-full py-3.5 shadow-sm hover:shadow-md transition-all duration-300"
-                        onClick={() => setShowBookingModal(false)}
-                        disabled={isSubmitting}
+                      variant="outline"
+                      className="w-full border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-full py-3.5 shadow-sm hover:shadow-md transition-all duration-300"
+                      onClick={() => setShowDetailsModal(false)}
+                      disabled={isSubmitting}
                     >
                       Cancel
                     </Button>
                     <Button
-                        className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
-                        onClick={handleBookingSubmit}
-                        disabled={isSubmitting || !isPaymentCompleted}
+                      className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
+                      onClick={handleBookingSubmit}
+                      disabled={isSubmitting || !isPaymentCompleted}
                     >
                       {isSubmitting ? (
-                          <span className="flex items-center">
-                            <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                              <path
-                                  className="opacity-75"
-                                  fill="currentColor"
-                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                              />
-                            </svg>
-                            Processing...
-                          </span>
+                        <span className="flex items-center">
+                          <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                            />
+                          </svg>
+                          Processing...
+                        </span>
                       ) : (
-                          'Confirm Booking'
+                        'Confirm Booking'
                       )}
                     </Button>
                   </div>
                 </div>
               </div>
+              <div className="flex flex-col gap-4">
+                <Button
+                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
+                  onClick={() => {
+                    setShowDetailsModal(false);
+                    openContactModal(selectedVendor!);
+                  }}
+                  disabled={isSubmitting}
+                >
+                  Contact Vendor
+                </Button>
+              </div>
             </div>
-        )}
-      </section>
+          </div>
+        </div>
+      )}
+
+      {showBookingModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 animate-fade-in transition-opacity duration-500">
+          <div className="bg-white/95 backdrop-blur-lg rounded-3xl p-8 max-w-md sm:max-w-lg w-full max-h-[90vh] overflow-y-auto relative shadow-2xl transform transition-transform duration-500 scale-95 animate-scale-in">
+            <button
+              onClick={() => setShowBookingModal(false)}
+              className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition-colors duration-300 bg-gray-100 rounded-full p-2.5 shadow-sm hover:shadow-md"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            <h3 className="text-2xl font-bold text-gray-900 mb-6 tracking-tight">
+              Book {selectedVendor?.name}
+            </h3>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={bookingData.name}
+                  onChange={handleBookingChange}
+                  className={`w-full px-4 py-3 border ${errors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                  placeholder="Your Name"
+                  required
+                  disabled={isSubmitting}
+                />
+                {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={bookingData.email}
+                  onChange={handleBookingChange}
+                  className={`w-full px-4 py-3 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                  placeholder="Your Email"
+                  required
+                  disabled={isSubmitting}
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1.5">{errors.email}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Phone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={bookingData.phone}
+                  onChange={handleBookingChange}
+                  className={`w-full px-4 py-3 border ${errors.phone ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                  placeholder="+91xxxxxxxxxx"
+                  required
+                  disabled={isSubmitting}
+                />
+                {errors.phone && <p className="text-red-500 text-xs mt-1.5">{errors.phone}</p>}
+              </div>
+              <div className="relative">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 transition-all duration-300">
+                  Event Date
+                </label>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="date"
+                    name="eventDate"
+                    value={bookingData.eventDate}
+                    onChange={handleBookingChange}
+                    className={`w-full pl-10 pr-4 py-3 border ${errors.eventDate ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                    min={new Date().toISOString().split('T')[0]}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.eventDate && <p className="text-red-500 text-xs mt-1.5">{errors.eventDate}</p>}
+              </div>
+              <div className="relative">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 transition-all duration-300">
+                  Event Time
+                </label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="time"
+                    name="eventTime"
+                    value={bookingData.eventTime}
+                    onChange={handleBookingChange}
+                    className={`w-full pl-10 pr-4 py-3 border ${errors.eventTime ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.eventTime && <p className="text-red-500 text-xs mt-1.5">{errors.eventTime}</p>}
+              </div>
+              <div className="relative">
+                <label className="block text-sm font-semibold text-gray-700 mb-2 transition-all duration-300">
+                  Deposit Amount (₹)
+                </label>
+                <div className="relative">
+                  <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <input
+                    type="number"
+                    name="deposit"
+                    value={bookingData.deposit}
+                    onChange={handleBookingChange}
+                    className={`w-full pl-10 pr-4 py-3 border ${errors.deposit ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                    placeholder="Enter deposit amount"
+                    min="0"
+                    required
+                    disabled={isSubmitting}
+                  />
+                </div>
+                {errors.deposit && <p className="text-red-500 text-xs mt-1.5">{errors.deposit}</p>}
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Method</label>
+                <div className="grid grid-cols-1 gap-4">
+                  <div
+                    className={`p-4 border rounded-lg cursor-pointer transition-all duration-300 ${bookingData.paymentMethod === 'online'
+                      ? 'border-rose-500 bg-rose-50 shadow-md'
+                      : 'border-gray-300 hover:bg-gray-50 hover:shadow-sm'
+                      } ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    onClick={() => {
+                      if (!isSubmitting) {
+                        handleBookingChange({ target: { name: 'paymentMethod', value: 'online' } });
+                        initiateRazorpayPayment();
+                      }
+                    }}
+                  >
+                    <CreditCard className="h-6 w-6 text-rose-500 mb-2 mx-auto" />
+                    <p className="text-sm font-semibold text-gray-800 text-center">
+                      {isSubmitting ? 'Processing Payment...' : 'Pay with UPI'}
+                    </p>
+                  </div>
+                </div>
+                {errors.paymentMethod && <p className="text-red-500 text-xs mt-1.5">{errors.paymentMethod}</p>}
+              </div>
+              {bookingData.paymentMethod === 'online' && (
+                <div className="relative">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">UPI ID</label>
+                  <div className="relative">
+                    <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <input
+                      type="text"
+                      name="upiId"
+                      value={bookingData.upiId}
+                      onChange={handleBookingChange}
+                      className={`w-full pl-10 pr-4 py-3 border ${errors.upiId ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent transition-all duration-300 shadow-sm hover:shadow-md`}
+                      placeholder="Enter UPI ID (e.g., name@upi)"
+                      required
+                      disabled={isSubmitting}
+                    />
+                  </div>
+                  {errors.upiId && <p className="text-red-500 text-xs mt-1.5">{errors.upiId}</p>}
+                </div>
+              )}
+              {(bookingData.name || bookingData.email || bookingData.phone || bookingData.eventDate || bookingData.eventTime || bookingData.deposit || bookingData.paymentMethod || bookingData.paymentId) && (
+                <div className="border-t pt-6">
+                  <h4 className="text-lg font-semibold text-gray-800 mb-3">Booking Summary</h4>
+                  <div className="space-y-2 text-sm text-gray-600">
+                    <p><strong>Vendor:</strong> {selectedVendor?.name}</p>
+                    {bookingData.name && <p><strong>Name:</strong> {bookingData.name}</p>}
+                    {bookingData.email && <p><strong>Email:</strong> {bookingData.email}</p>}
+                    {bookingData.phone && <p><strong>Phone:</strong> {bookingData.phone}</p>}
+                    {bookingData.eventDate && <p><strong>Date:</strong> {bookingData.eventDate}</p>}
+                    {bookingData.eventTime && <p><strong>Time:</strong> {bookingData.eventTime}</p>}
+                    {bookingData.deposit && <p><strong>Deposit:</strong> ₹{bookingData.deposit}</p>}
+                    {bookingData.paymentMethod && <p><strong>Payment Method:</strong> UPI</p>}
+                    {bookingData.upiId && <p><strong>UPI ID:</strong> {bookingData.upiId}</p>}
+                    {bookingData.paymentId && <p><strong>Payment ID:</strong> {bookingData.paymentId}</p>}
+                  </div>
+                </div>
+              )}
+              <div className="flex gap-4">
+                <Button
+                  variant="outline"
+                  className="w-full border-gray-300 text-gray-600 hover:bg-gray-100 font-semibold rounded-full py-3.5 shadow-sm hover:shadow-md transition-all duration-300"
+                  onClick={() => setShowBookingModal(false)}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:from-rose-600 hover:to-pink-600 font-semibold rounded-full py-3.5 shadow-lg hover:shadow-xl transition-all duration-300"
+                  onClick={handleBookingSubmit}
+                  disabled={isSubmitting || !isPaymentCompleted}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center">
+                      <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Processing...
+                    </span>
+                  ) : (
+                    'Confirm Booking'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
   );
 };
 

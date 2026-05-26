@@ -46,7 +46,7 @@ interface DashboardStats {
   totalRevenue: number;
 }
 
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 const Header: React.FC = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -821,8 +821,8 @@ const Header: React.FC = () => {
                   <button
                     onClick={() => { setIsLogin(true); setForgotPassword(false); resetForm(); }}
                     className={`flex-1 py-3 text-center font-semibold rounded-md transition-all duration-300 ${isLogin && !forgotPassword
-                        ? 'text-white bg-gradient-to-r from-rose-500 to-pink-500 shadow-md'
-                        : 'text-gray-700 hover:text-pink-600'
+                      ? 'text-white bg-gradient-to-r from-rose-500 to-pink-500 shadow-md'
+                      : 'text-gray-700 hover:text-pink-600'
                       }`}
                     aria-label="Switch to login"
                   >
@@ -831,8 +831,8 @@ const Header: React.FC = () => {
                   <button
                     onClick={() => { setIsLogin(false); setForgotPassword(false); resetForm(); }}
                     className={`flex-1 py-3 text-center font-semibold rounded-md transition-all duration-300 ${!isLogin && !forgotPassword
-                        ? 'text-white bg-gradient-to-r from-rose-500 to-pink-500 shadow-md'
-                        : 'text-gray-700 hover:text-pink-600'
+                      ? 'text-white bg-gradient-to-r from-rose-500 to-pink-500 shadow-md'
+                      : 'text-gray-700 hover:text-pink-600'
                       }`}
                     aria-label="Switch to sign up"
                   >

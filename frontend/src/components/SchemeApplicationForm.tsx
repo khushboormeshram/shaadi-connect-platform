@@ -30,7 +30,7 @@ const SchemeApplicationForm: React.FC = () => {
     setSuccess(false);
 
     try {
-      const response = await fetch('http://localhost:5000/api/apply-scheme', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/apply-scheme`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
