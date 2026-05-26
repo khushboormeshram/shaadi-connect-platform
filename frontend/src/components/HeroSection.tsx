@@ -162,7 +162,7 @@ const HeroSection = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:5000/api/plan-honeymoon', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/plan-honeymoon`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -285,7 +285,7 @@ const HeroSection = () => {
     const totalPriceINR = totalPriceUSD * 83 * 100; // Convert USD to INR paise (1 USD = 83 INR)
 
     try {
-      const response = await fetch('http://localhost:5000/create-order', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/create-order`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -318,7 +318,7 @@ const HeroSection = () => {
           order_id: order.id,
           handler: async (response: { razorpay_payment_id: string; razorpay_order_id: string; razorpay_signature: string }) => {
             try {
-              const verifyResponse = await fetch('http://localhost:5000/verify-payment', {
+              const verifyResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/verify-payment`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -456,18 +456,16 @@ const HeroSection = () => {
             <div className="bg-white/50 backdrop-blur-sm rounded-full p-1 shadow-lg">
               <button
                 onClick={() => setActiveTab('vendors')}
-                className={`px-6 py-3 rounded-full font-semibold transition-all ${
-                  activeTab === 'vendors' ? 'tab-active' : 'tab-inactive hover:bg-white/90'
-                }`}
+                className={`px-6 py-3 rounded-full font-semibold transition-all ${activeTab === 'vendors' ? 'tab-active' : 'tab-inactive hover:bg-white/90'
+                  }`}
               >
                 <Search className="w-4 h-4 inline mr-2" />
                 Find Vendors
               </button>
               <button
                 onClick={() => setActiveTab('honeymoon')}
-                className={`px-6 py-3 rounded-full font-semibold transition-all ${
-                  activeTab === 'honeymoon' ? 'tab-active' : 'tab-inactive hover:bg-white/90'
-                }`}
+                className={`px-6 py-3 rounded-full font-semibold transition-all ${activeTab === 'honeymoon' ? 'tab-active' : 'tab-inactive hover:bg-white/90'
+                  }`}
               >
                 <Heart className="w-4 h-4 inline mr-2" />
                 Plan Honeymoon
